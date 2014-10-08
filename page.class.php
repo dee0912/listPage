@@ -1,11 +1,10 @@
 <?php
 
-class MyPage{
+class MyPageUrl{
 
 	private $totalNum;			//总条数
 	private $perpageNum;		//每页显示条数	
 	private $pageNow;			//当前页页码
-	private $method;			//"url"为普通分页，"ajax"为Ajax分页
 
 	
 	//页码显示
@@ -27,38 +26,59 @@ class MyPage{
 	private $preFonts = "上一页";
 	private $omit = "…";
 
+	//输出的页码
+	private $pageShow;
+
 	//构造函数
-	function __construct($totalNum,$perpageNum,$floPage){
+	function __construct($totalNum,$perpageNum,$floPage,$p){
 	
 		$this->totalNum = $totalNum;
 		$this->perpageNum = $perpageNum;
 		$this->floPage = $floPage;
 
-		$this->getPageNow();
+		$this->getPageNow($p);
 
 		$this->totalPage = ceil($this->totalNum / $this->perpageNum); //总页数
 		$this->firstRow = $this->perpageNum * ($this->pageNow-1) + 1;//当前页第一条是总条数中第几条
 
-		if($this->pageNow == 1){
+		if($this->pageNow < 5){
 		
-			//第一页时页码向后偏移量
-			for($i=0;$i<$this->floPage;$i++){
+			if($this->totalPage > $this->floPage){
 			
-				$page = $this->pageNow+$i;
-				echo "<a href=\"#&p=".$page."\">".$page."</a>";
-			}
+				for($i=0;$i<=$this->floPage;$i++){
+			
+					$page = $this->pageNow+$i;
+					$this->pageShow .= "<a class=\"pagenum\" href=\"demo.php?p=".$page."\">".$page."</a>";
+				}
+			}else{
+			
+				for($i=0;$i<$this->totalPage;$i++){
+			
+					$page = $this->pageNow+$i;
+					$this->pageShow .= "<a class=\"pagenum\" href=\"demo.php?p=".$page."\">".$page."</a>";
+				}
+			}	
+		}else{
+		
+			$this->pageShow = "<a class=\"pagenum\" href=\"demo.php?p=6\">6</a>";
 		}
 	}
 
-	//获得当前页页码
-	public function getPageNow(){
+	//定义__toString方法,把对象解析成字符串
+	public function __toString(){
 	
-		if(!isset($_GET['p'])){
+		return $this->pageShow;
+	}
+
+	//获得当前页页码,$p用来接收$_GET['p']
+	public function getPageNow($p){
+	
+		if(!isset($p)){
 			
 			$this->pageNow = 1;
-		}else if(is_int($_GET['p']) && $_GET['p']>0){
+		}else if(is_int($p) && $p>0){
 			
-			$this->pageNow = $_GET['p'];	
+			$this->pageNow = $p;	
 		}else{
 		
 			die("page number error");

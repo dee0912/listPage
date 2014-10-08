@@ -1,0 +1,34 @@
+/* 
+**分页偏移量4页
+**始终显示第一页和最后一页
+**省略号带链接
+**下拉菜单选择页码
+**手动输入的页码，点击"跳转"按钮跳转
+*/
+
+a{ font-size:14px; font-family:Tahoma; color:#444; text-decoration:none;}
+
+#page{
+
+	
+}
+
+#page a.pagenum{
+
+	margin-left:3px;
+	margin-right:3px;
+	padding:1px 7px;
+	border:1px solid #ccc;
+}
+
+#page a.pagenum:hover{
+
+	background-color:#95071b;
+	color:#fff;
+}
+
+.selected{
+
+	background-color:#95071b;
+	color:#fff;
+}
