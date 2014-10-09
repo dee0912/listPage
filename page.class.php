@@ -2,67 +2,199 @@
 
 class MyPageUrl{
 
-	private $totalNum;			//总条数
 	private $perpageNum;		//每页显示条数	
 	private $pageNow;			//当前页页码
+	private $url;				//当前url
 
 	
 	//页码显示
-	private $showFirst = 1;		//页码默认显示首页，0为不显示
-	private $showLast = 1;		//页码默认显示最后一页，0为不显示
-	private $showPerOmit = 1;	//页码默认显示之前的省略号
-	private $showFolOmit = 1;	//页码默认显示之后的省略号
-	private $omitStyle = 0;		//省略号是否加链接，0为不加，1为加
-	private $preOmitNum = 4;	//前面的省略号默认往前跳转4页
-	private $floOmitNUm = 4;	//后面的省略号默认往后跳转4页
-	private $prePage = 4;		//页码偏移量前4页
-	private $floPage = 4;		//页码偏移量后4页
-	private $skipStyle = 0;		//手动跳转，0为手动输入页码，1为下拉菜单选择页码
+	private $pageStyle; //页码样式，提供3种样式
+	private $prePage;		//页码偏移量前4页
+	private $floPage;		//页码偏移量后4页
+	private $skipStyle;		//手动跳转，0为手动输入页码，1为下拉菜单选择页码
 
 	//页码文字
+	//style2&style3
 	private $firstFonts = "首页";
 	private $lastFonts = "末页";
-	private $nextFonts = "下一页";
-	private $preFonts = "上一页";
-	private $omit = "…";
 
-	//输出的页码
+	private $nextFonts = "下一页 >";		
+	private $preFonts = "< 上一页";
+
+	//前n页，后n页
+	private $pn = 10;
+	private $pn_fonts = "前10页";
+	private $fn = 10;
+	private $fn_fonts = "后10页";
+
+	//展现的页码
 	private $pageShow;
 
 	//构造函数
-	function __construct($totalNum,$perpageNum,$floPage,$p){
+	function __construct($totalNum,$perpageNum,$prePage,$preFonts,$floPage,$nextFonts,$p,$skipStyle,$pageStyle){
 	
-		$this->totalNum = $totalNum;
 		$this->perpageNum = $perpageNum;
+		$this->prePage = $prePage;
 		$this->floPage = $floPage;
+		$this->skipStyle = $skipStyle;
+		$this->pageStyle = $pageStyle;
 
 		$this->getPageNow($p);
 
-		$this->totalPage = ceil($this->totalNum / $this->perpageNum); //总页数
+		$this->totalPage = ceil($totalNum / $this->perpageNum); //总页数
 		$this->firstRow = $this->perpageNum * ($this->pageNow-1) + 1;//当前页第一条是总条数中第几条
 
-		if($this->pageNow < 5){
+		$this->pageShow = "";
 		
-			if($this->totalPage > $this->floPage){
+		//前偏移量的处理
+		if($this->pageNow!=1 && ($this->pageNow - $this->prePage -1 <= 1)){
+					
+			$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".($this->pageNow-1)."\">".($preFonts == ""?$this->preFonts:$preFonts)."</a>";
 			
-				for($i=0;$i<=$this->floPage;$i++){
+			for($i=1;$i<=$this->pageNow-1;$i++){		
+
+				$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".$i."\">".$i."</a>";	
+			}
+
+		}else if($this->pageNow - $this->prePage -1 > 1){ //pageNow至少大于2时才会出现"1..."
 			
-					$page = $this->pageNow+$i;
-					$this->pageShow .= "<a class=\"pagenum\" href=\"demo.php?p=".$page."\">".$page."</a>";
+			//样式1.加上'首页'
+			if($this->pageStyle == 2 || $this->pageStyle == 3){
+				
+				$this->pageShow .= "<a id=\"first_page\" class=\"pagenum\" href=\"".$url."?p=1\">".$this->firstFonts."</a>";
+
+				//style3.前n页
+				if($this->pageStyle == 3){
+				
+					if($this->pageNow>$this->pn){
+					
+						$this->pageShow .= "<a id=\"first_page\" class=\"pagenum\" href=\"".$url."?p=".($this->pageNow-$this->pn)."\">".$this->pn_fonts."</a>";
+					}
 				}
-			}else{
+			}
 			
-				for($i=0;$i<$this->totalPage;$i++){
 			
-					$page = $this->pageNow+$i;
-					$this->pageShow .= "<a class=\"pagenum\" href=\"demo.php?p=".$page."\">".$page."</a>";
-				}
-			}	
-		}else{
-		
-			$this->pageShow = "<a class=\"pagenum\" href=\"demo.php?p=6\">6</a>";
+			$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".($this->pageNow-1)."\">".($preFonts == ""?$this->preFonts:$preFonts)."</a>";
+			
+			//样式2.加上第一页'1'...
+			if($this->pageStyle == 1){
+				$this->pageShow .=  "<a class=\"pagenum\" href=\"".$url."\">1</a><a class=\"pagenum\" href=\"".$url."?p=".($this->pageNow-$this->prePage-1)." \" title=\"第".($this->pageNow-$this->prePage-1)."页\">…</a>";
+			}
+
+			for($i=$this->prePage;$i>=1;$i--){		
+
+				$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".($this->pageNow-$i)."\">".($this->pageNow-$i)."</a>";	
+			}
 		}
+
+		//后偏移量的处理
+		if($this->totalPage > $this->floPage){ //总页数大于后偏移量时
+		
+			for($i=0;$i<=$this->floPage;$i++){
+			
+				$page = $this->pageNow+$i;
+				
+				if($page<=$this->totalPage){
+
+					$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".$page."\">".$page."</a>";
+				}
+			}
+
+			if($this->pageNow < $this->totalPage){
+
+				
+				//当前页+后偏移量+1小于总页数时出现"..."
+				if(($this->pageNow+$this->floPage+1)<$this->totalPage){
+			
+					//样式1.显示'...'
+					if($this->pageStyle == 1){
+						$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".($page+1)."\" title=\"第".($page+1)."页\">…</a>";
+					}
+				}
+				
+				
+				//当前页+后偏移量+1小于等于总页数时出现最后一页的快捷标签
+				if(($this->pageNow+$this->floPage+1)<=$this->totalPage){
+				
+					//最后一页
+					//样式1.始终出现'最后一页页码'
+					if($this->pageStyle == 1){
+						$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".$this->totalPage."\" title=\"总共".$this->totalPage."页\">".$this->totalPage."</a>";
+					}
+				}						
+
+				$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".($this->pageNow+1)."\">".($nextFonts == ""?$this->nextFonts:$nextFonts)."</a>"; //当实例化对象时用户传递的文字为空时则调用类预设的"下一页",否则输出用户传递的值
+
+				//style3.加上后n页
+				if($this->pageStyle == 3){
+				
+					if(($this->pageNow+10)<$this->totalPage){
+					
+						$this->pageShow .= "<a id=\"first_page\" class=\"pagenum\" href=\"".$url."?p=".($this->pageNow+$this->fn)."\">".$this->fn_fonts."</a>";
+					}
+				}
+
+				//显示'末页'
+				if($this->pageStyle == 2 || $this->pageStyle == 3){
+				
+					if(($this->pageNow+$this->floPage+1)<$this->totalPage){
+
+						$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".$this->totalPage."\">末页</a>";
+					}
+				}
+
+			}else if($this->pageNow > $this->totalPage){
+			
+				die("超出页码范围");
+			}
+
+		}else{ //总页数小于后偏移量时
+			
+			for($i=0;$i<$this->totalPage;$i++){
+			
+				$page = $this->pageNow+$i;
+				$this->pageShow .= "<a class=\"pagenum\" href=\"".$url."?p=".$page."\">".$page."</a>";
+			}
+		}
+	
+		//其他页码信息
+		$this->pageShow .= "&nbsp;跳转至 ";
+
+		//跳转类型
+		if($this->skipStyle =="" ){ //不加跳转
+		
+			$this->pageShow .= "";
+		}else if($this->skipStyle == 1){ //输入框
+		
+			$this->pageShow .= "<input id=\"skip\" type=\"text\" value=\"".$this->pageNow."\">";
+		
+			$this->pageShow .= "<button id=\"go\">GO</button>";
+		}else if($this->skipStyle == 2){ //下拉菜单
+		
+			//选择下拉菜单自动跳转
+			$this->pageShow .= "<select id=\"select_page\" onchange=\"location.href=this.options[this.selectedIndex].value;\" >";
+			
+			for($i=1;$i<=$this->totalPage;$i++){
+			
+				$this->pageShow .= "<option value=\"".$url."?p=".$i."\"";  
+				
+				//下拉菜单默认显示当前页
+				if($i == $this->pageNow){
+				
+					$this->pageShow .= " selected";
+				}
+				
+				$this->pageShow .= ">".$i."</option>";
+			}
+			
+			$this->pageShow .= "</select>";
+		}
+
+		$this->pageShow .= "&nbsp;&nbsp;当前第".$this->pageNow."页";
+		$this->pageShow .= "/共".$this->totalPage."页";
+		$this->pageShow .= "&nbsp;共".$totalNum."条";
 	}
+			
 
 	//定义__toString方法,把对象解析成字符串
 	public function __toString(){
@@ -76,7 +208,7 @@ class MyPageUrl{
 		if(!isset($p)){
 			
 			$this->pageNow = 1;
-		}else if(is_int($p) && $p>0){
+		}else if($p>0){
 			
 			$this->pageNow = $p;	
 		}else{
@@ -87,5 +219,22 @@ class MyPageUrl{
 		return $this->pageNow;
 	}
 
+
+    //设置当前页面链接
+    public function url()
+    {
+        $url  =  $_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'],'?')?'':"?").$this->parameter;
+        $parse = parse_url($url);
+        if(isset($parse['query'])) {
+            parse_str($parse['query'],$params);
+            unset($params[$this->page_name]);
+            $url   =  $parse['path'].'?'.http_build_query($params);
+        }
+        if(!empty($params))
+        {
+            $url .= '&';
+        }
+        $this->url = $url;
+    }
 
 }
