@@ -40,6 +40,9 @@ $mypageurl = new MyPageUrl($totalNum,$perpageNum,$perPage,$preFonts,$floPage,$ne
 //每页第一条
 $firstRow = $mypageurl->getFirstRow();
 
+//总条数
+$totalPage = $mypageurl->getTotalPage();
+
 //输出列表
 $sql = "select title from ips_archives order by pubdate desc limit ".$firstRow.",".$perpageNum;
 
@@ -53,6 +56,7 @@ $smarty->assign("Template_Dir",Template_Dir);
 $smarty->assign("page_act",$page_act); //传递分页方式
 $smarty->assign("pageNow",$p); //传递当前页
 $smarty->assign("perpageNum",$perpageNum); //传递每页几条数据
+$smarty->assign("totalPage",$totalPage); //传递总页数
 $smarty->assign("rowsArray",$rowsArray);
 $smarty->assign("mypage",$mypageurl);
 $smarty->display("demo.html");

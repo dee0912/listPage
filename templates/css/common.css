@@ -2,7 +2,7 @@
 a{ font-size:14px; font-family:Tahoma; color:#444; text-decoration:none;}
 ul{ list-style-type:none;}
 
-/* 列表样式 */
+/* ***************************列表样式******************** */
 #list{
 
 	width:1000px;
@@ -22,9 +22,17 @@ ul{ list-style-type:none;}
 	border-bottom:1px solid #95071b;
 }
 
-/* 跳转样式 */
+/* ****************************跳转样式******************** */
 #skip{
 
 	width:36px;
 	text-align:center;
+}
+
+/* ****************************ajax************************* */
+.loading{
+
+	position:absolute;
+	top:20%;
+	left:35%;
 }

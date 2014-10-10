@@ -50,8 +50,8 @@ class MyPageUrl{
 
 		$this->getPageNow($p);
 
-		$this->totalPage = ceil($totalNum / $this->perpageNum); //总页数
-		
+		$this->totalPage = $this->getTotalPage(); //总页数
+
 		$this->pageShow = "";
 		$this->getUrl();
 	}
@@ -332,6 +332,12 @@ class MyPageUrl{
 
 		return $firstRow;
 	}
-
+	
+	/********************获得总页数***********************/
+	public function getTotalPage(){
+	
+		$totalPage = ceil($this->totalNum / $this->perpageNum);
+		return $totalPage;
+	}
 
 }
