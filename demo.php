@@ -24,7 +24,6 @@ if($page_act == 1){
 $p = isset($_GET['p'])?$_GET['p']:1; //当前页码
 
 //在page.class.php中定义__toString方法，把对象$mypage解析成字符串输出
-<<<<<<< HEAD
 
 //参数分别是:总条数、每页条数、前偏移量、"上一页"文字内容(默认为""时显示"上一页")、后偏移量、"下一页"文字内容(默认为""时显示"下一页")、当前地址栏页码数、手动跳转样式、页码显示样式、样式2是否加前n页后n页、分页方式(url/ajax)
 
@@ -49,14 +48,6 @@ $rowsArray = $conne->getRowsArray($sql);
 
 //显示页码
 $pageShow = $mypageurl->preOffset($preFonts).$mypageurl->floOffset($nextFonts).$mypageurl->getOtherInfo();
-=======
-<<<<<<< HEAD
-
-//参数分别是:总条数、每页条数、前偏移量、"上一页"文字内容(默认为""时显示"上一页")、后偏移量、"下一页"文字内容(默认为""时显示"下一页")、当前地址栏页码数、手动跳转样式、页码显示样式
-=======
->>>>>>> origin/master
-$mypageurl = new MyPageUrl($totalNum,$perpageNum,$perPage,"",$floPage,"",$p,$skipStyle,$pageStyle);
->>>>>>> origin/master
 
 $smarty->assign("Template_Dir",Template_Dir);
 $smarty->assign("page_act",$page_act); //传递分页方式
