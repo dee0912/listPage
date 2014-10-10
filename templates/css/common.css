@@ -1,5 +1,26 @@
 
 a{ font-size:14px; font-family:Tahoma; color:#444; text-decoration:none;}
+ul{ list-style-type:none;}
+
+/* 列表样式 */
+#list{
+
+	width:1000px;
+	margin-bottom:20px;
+	border:1px solid #95071b;
+}
+
+#list ul{
+
+	margin:5px 20px;
+	padding:0px;
+}
+
+#list li{
+
+	line-height:24px;
+	border-bottom:1px solid #95071b;
+}
 
 /* 跳转样式 */
 #skip{

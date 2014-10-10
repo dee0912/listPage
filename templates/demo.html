@@ -9,8 +9,23 @@
 </head>
 <body>
 
+	<div id="list">
+		
+		<ul id="newsul">
+			
+			<{foreach $rowsArray as $val}>
+				<li><{$val['title']}></li>
+			<{/foreach}>
+
+		</ul>
+
+	</div>
 	<div id="page"><{$mypage}></div>
 	<input id="pageNow" type="hidden" value="<{$pageNow}>">
+	<!--分页方式-->
+	<input id="page_act" type="hidden" value="<{$page_act}>">
+	<!--每页几条数据-->
+	<input id="perpageNum" type="hidden" value="<{$perpageNum}>">
 </body>
 <script>
 
@@ -37,12 +52,70 @@
 			});
 		}
 
+		//点击"GO"按钮跳转
 		if($("#go").length>0){
 		
 			$("#go").click(function(){
 			
 				self.location="demo.php?p="+$("#skip").val();
 			});
+		}
+
+		//row
+		$("#list ul").children("li:last").css("border-bottom",0);
+
+		//ajax时取消页码a标签跳转
+		if($("#page_act").val() == 1){ 
+//		
+//			$(".pagenum").click(function(){
+//			
+//				
+//			});
+
+			//ajax "首页"
+	//		if($("#first_page").length>0){
+	//		
+	//			$("#first_page").cklick(function(){
+	//			
+	//				$.post("ajaxpage.php",{
+	//				
+	//					
+	//				},function(data,textStatus){
+	//				
+	//				
+	//				});
+	//			});
+	//		}
+
+			//ajax "下一页"
+			if($("#flo_page").length>0){
+			
+				$("#flo_page").click(function(){
+
+					//初始值=1
+					var apagenow = $("#pageNow").val();
+
+					//每点击"下一次",隐藏域值+1
+					apagenow = parseInt(apagenow) + parseInt(1);
+
+					$("#pageNow").val(apagenow);
+
+					//隐藏域的页码值小于总页码时
+					if($("#pageNow").val()<$("#totalpage_info").val()){
+					
+						$.post("../ajaxpage.php",{
+					
+							pageNow : $("#pageNow").val(),
+							perpageNum : $("#perpageNum").val()
+						},function(data,textStatus){
+					
+							//$("#newsul").
+						});
+					}
+
+					return false; //取消点击翻页
+				});
+			}
 		}
 
 	});
