@@ -18,13 +18,11 @@ $firstRow = $perpageNum * ($pageNow-1) + 1;
 
 $sql = "select title from ips_archives order by pubdate desc limit ".$firstRow.",".$perpageNum;
 
-//file_put_contents("d:/mylog.log",$sql."\r\n",FILE_APPEND);
 
 $rowsArray = $conne->getRowsArray($sql);
 
 //把二维数组转换成json格式
 echo json_encode($rowsArray);
 
-//file_put_contents("d:/mylog.log",json_encode($rowsArray)."\r\n",FILE_APPEND);
 
 

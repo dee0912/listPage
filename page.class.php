@@ -340,4 +340,16 @@ class MyPageUrl{
 		return $totalPage;
 	}
 
+	/* ****************获取上一页、下一页文字*************** */
+
+	public function getPreFonts($preFonts){
+	
+			return ($preFonts=="")?$this->preFonts:$preFonts;
+	}
+	
+	public function getNextFonts($nextFonts){
+	
+			return ($nextFonts=="")?$this->nextFonts:$nextFonts;
+	} 
+
 }

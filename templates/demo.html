@@ -5,7 +5,7 @@
 <title>PHP分页类</title>
 <link href="<{$Template_Dir}>/css/common.css"  rel="stylesheet" type="text/css">
 <link href="<{$Template_Dir}>/css/style1.css"  rel="stylesheet" type="text/css">
-<script src="<{$Template_Dir}>/js/jquery-1.8.3.min.js"></script>
+<script id="jq" src="<{$Template_Dir}>/js/jquery-1.8.3.min.js"></script>
 </head>
 <body>
 
@@ -28,6 +28,9 @@
 	<input id="perpageNum" type="hidden" value="<{$perpageNum}>">
 	<!--总页数-->
 	<input id="totalPage" type="hidden" value="<{$totalPage}>">
+	<!--//把smarty的变量传递给外部js-->
+	<input id="Template_Dir" type="hidden" value="<{$Template_Dir}>">
+	<input id="preFonts" type="hidden" value="<{$preFonts}>">
 </body>
 <script>
 
@@ -62,106 +65,16 @@
 				self.location="demo.php?p="+$("#skip").val();
 			});
 		}
+		
+		//如果分页方式是ajax，则加载外部ajax.js
+		if($("#page_act").val() == 1){
+		
+			//把smarty的变量传递给外部js
+			$Template_Dir = $("#Template_Dir").val();
+			$preFonts = $("#preFonts").val();
 
-
-		//ajax时取消页码a标签跳转
-		if($("#page_act").val() == 1){ 
-			
-			//删除原先的li,插入gif
-			function ajaxpre(){
-			
-				//删除原先的title
-				$("#newsul li").remove();
-
-				//插入gif图
-				$loading = $("<img class=\"loading\" src=\"<{$Template_Dir}>/images/loading.gif\">");
-
-				$loading.appendTo($("#newsul"));
-			}
-
-			//当前页大于总页数时，"下一页"和"末页"隐藏
-			function removeInfo(){
-			
-				if(parseInt($("#pageNow").val()) == parseInt($("#totalPage").val())){
-					
-					//当前页大于总页数时，"下一页"和"末页"隐藏
-					$("#flo_page").remove();
-					$("#last_page").remove();
-				}
-			}
-						
-			
-			//初始值=1
-			apagenow = $("#pageNow").val();
-			
-			//ajax "下一页"
-			if($("#flo_page").length>0){
-
-				$("#flo_page").click(function(){
-
-					ajaxpre();
-					
-					//每点击"下一次",隐藏域值+1
-					apagenow = parseInt(apagenow) + parseInt(1);
-
-					$("#pageNow").val(apagenow);
-
-					//隐藏域的页码值小于总页码时
-					if(parseInt($("#pageNow").val()) <= parseInt($("#totalPage").val())){
-					
-						//修改页码信息
-						$("#pagenow_info").html("&nbsp;&nbsp;当前第"+$("#pageNow").val()+"页")
-
-						$.post("ajaxpage.php",{
-					
-							pageNow : parseInt($("#pageNow").val()),
-							perpageNum : parseInt($("#perpageNum").val())
-						},function(data,textStatus){
-					
-							//接收json数据
-							var dataObj=eval("("+data+")"); //转换为json对象 
-							
-							//删除gif
-							$(".loading").remove();
-
-							$.each(dataObj,function(idx,item){ 
-															
-								$li_new = $("<li>"+item.title+"</li>");
-								$li_new.appendTo($("#newsul"));
-							})
-							$("#list ul").children("li:last").css("border-bottom",0);
-						});
-					}
-
-					removeInfo();
-					
-					return false; //取消点击翻页
-				});
-			}
-
-			//ajax "末页"
-			if($("#last_page").length>0){
-			
-				$("#last_page").click(function(){
-				
-					ajaxpre();
-					
-					//修改隐藏域当前页信息
-					apagenow = $("#totalPage").val();
-					$("#pageNow").val(apagenow);
-
-					//修改页码信息
-					$("#pagenow_info").html("&nbsp;&nbsp;当前第"+$("#totalPage").val()+"页");
-					
-					//ajax
-
-					removeInfo();
-
-					return false;
-				});
-			}
-
-			
+			$insertAjax = $("<script src=\"<{$Template_Dir}>/js/ajax.js\"><\/script>");
+			$insertAjax.insertAfter($("#jq"));
 		}
 
 		//最后一行row去掉border-bottom
