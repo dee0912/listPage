@@ -206,7 +206,7 @@ class MyPageUrl{
 	public function floOffset($nextFonts){
 	
 		if($this->totalPage > $this->floPage){ //总页数大于后偏移量时
-		
+
 			for($i=0;$i<=$this->floPage;$i++){
 			
 				$page = $this->pageNow+$i;
@@ -240,7 +240,7 @@ class MyPageUrl{
 					//最后一页
 					//样式1.始终出现'最后一页页码'
 					if($this->pageStyle == 1){
-						$this->pageShow .= "<a class=\"pagenum\" href=\"".$this->url."p=".$this->totalPage."\" title=\"总共".$this->totalPage."页\">".$this->totalPage."</a>";
+						$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$this->totalPage."\" title=\"总共".$this->totalPage."页\">".$this->totalPage."</a>";
 					}
 				}						
 
@@ -267,15 +267,46 @@ class MyPageUrl{
 			}else if($this->pageNow > $this->totalPage){
 			
 				die("超出页码范围");
+			}else{ //当前页等于总页数
+			
+				if($this->page_act != 1){
+
+					$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$this->totalPage."\">".$this->totalPage."</a>";
+				}
 			}
 
 		}else{ //总页数小于后偏移量时
 			
-			for($i=0;$i<$this->totalPage;$i++){
+			if($this->pageNow < $this->totalPage){  //当前页小于总页数时
+
+				for($i=0;$i<$this->totalPage;$i++){
 			
-				$page = $this->pageNow+$i;
-				//页码后边界
-				$this->pageShow .= "<a class=\"pagenum\" href=\"".$this->url."p=".$page."\">".$page."</a>";
+					$page = $this->pageNow+$i;
+					
+					if($page < $this->totalPage){
+					
+						if($this->page_act != 1){
+
+							//页码后边界
+							$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$page."\">".$page."</a>";
+						}
+
+					}else if($page == $this->totalPage){
+					
+						if($this->page_act != 1){
+
+							$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$page."\">".$page."</a>";
+						}
+					}
+				}
+
+				$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".($this->pageNow+1)."\">".$this->nextFonts."</a>";
+			}else{ //当前页等于总页数
+			
+				if($this->page_act != 1){
+
+					$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$this->totalPage."\">".$this->totalPage."</a>";
+				}
 			}
 		}
 	}
