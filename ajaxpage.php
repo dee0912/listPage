@@ -16,7 +16,7 @@ if(isset($_POST['perpageNum']) && !empty($_POST['perpageNum'])){
 //当前页第一条数据
 $firstRow = $perpageNum * ($pageNow-1) + 1;
 
-$sql = "select title from ips_archives order by pubdate desc limit ".$firstRow.",".$perpageNum;
+$sql = "select title from ips_archives order by pubdate desc limit ".($firstRow-1).",".$perpageNum;
 
 
 $rowsArray = $conne->getRowsArray($sql);
