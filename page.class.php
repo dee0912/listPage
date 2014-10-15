@@ -267,14 +267,7 @@ class MyPageUrl{
 			}else if($this->pageNow > $this->totalPage){
 			
 				die("超出页码范围");
-			}else{ //当前页等于总页数
-			
-				if($this->page_act != 1){
-
-					$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$this->totalPage."\">".$this->totalPage."</a>";
-				}
 			}
-
 		}else{ //总页数小于后偏移量时
 			
 			if($this->pageNow < $this->totalPage){  //当前页小于总页数时
@@ -297,10 +290,16 @@ class MyPageUrl{
 
 							$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$page."\">".$page."</a>";
 						}
+					}else if($this->pageNow > $this->totalPage){
+			
+						die("超出页码范围");
 					}
 				}
 
 				$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".($this->pageNow+1)."\">".$this->nextFonts."</a>";
+			}else if($this->pageNow > $this->totalPage){
+			
+				die("超出页码范围");
 			}else{ //当前页等于总页数
 			
 				if($this->page_act != 1){
