@@ -45,7 +45,7 @@ $firstRow = $mypageurl->getFirstRow();
 $totalPage = $mypageurl->getTotalPage();
 
 //输出列表
-$sql = "select title from ips_archives order by pubdate desc limit ".($firstRow-1).",".$perpageNum;
+$sql = "select title from ips_archives order by id asc limit ".($firstRow-1).",".$perpageNum;
 
 //取出数据(二维数组)
 $rowsArray = $conne->getRowsArray($sql);
