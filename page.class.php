@@ -151,7 +151,7 @@ class MyPageUrl{
 		if($this->pageNow!=1 && ($this->pageNow - $this->prePage -1 <= 1)){
 					
 			//上一页
-			$this->pageShow .= "<a id=\"per_page\" class=\"pagenum\" href=\"".$this->url."p=".($this->pageNow-1)."\">".($preFonts == ""?$this->preFonts:$preFonts)."</a>";
+			$this->pageShow .= "<a id=\"pre_page\" class=\"pagenum\" href=\"".$this->url."p=".($this->pageNow-1)."\">".($preFonts == ""?$this->preFonts:$preFonts)."</a>";
 
 			
 			//页码
@@ -166,7 +166,7 @@ class MyPageUrl{
 
 		}else if($this->pageNow - $this->prePage -1 > 1){ //pageNow至少大于2时才会出现"1..."
 			
-			//样式1.加上'首页'
+			//样式2.加上'首页'
 			if($this->pageStyle == 2 || $this->page_act == 1){
 				
 				//首页
@@ -264,9 +264,13 @@ class MyPageUrl{
 					}
 				}
 
-			}else if($this->pageNow > $this->totalPage){
+			}else if($this->pageNow > $this->totalPage && $this->totalPage != 0){
 			
 				die("超出页码范围");
+			}else if($this->totalPage == 0){
+			
+				echo "还没有文章";
+				exit();
 			}
 		}else{ //总页数小于后偏移量时
 			
@@ -290,16 +294,24 @@ class MyPageUrl{
 
 							$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".$page."\">".$page."</a>";
 						}
-					}else if($this->pageNow > $this->totalPage){
+					}else if($this->pageNow > $this->totalPage && $this->totalPage != 0){
 			
 						die("超出页码范围");
+					}else if($this->totalPage == 0){
+			
+						echo "还没有文章";
+						exit();
 					}
 				}
 
 				$this->pageShow .= "<a id=\"flo_page\" class=\"pagenum\" href=\"".$this->url."p=".($this->pageNow+1)."\">".$this->nextFonts."</a>";
-			}else if($this->pageNow > $this->totalPage){
+			}else if($this->pageNow > $this->totalPage && $this->totalPage != 0){
 			
 				die("超出页码范围");
+			}else if($this->totalPage == 0){
+			
+				echo "还没有文章";
+				exit();
 			}else{ //当前页等于总页数
 			
 				if($this->page_act != 1){
